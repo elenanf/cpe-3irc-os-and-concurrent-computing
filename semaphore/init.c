@@ -5,35 +5,9 @@
 #include <sys/sem.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "dijkstra.h"
 
 #define CLE 1234
-
-union semun {
-    int val;
-    struct semid_ds *buf;
-    unsigned short *array;
-    struct seminfo *__buf; /* Tampon pour IPC_INFO (spécifique à Linux) */
-};
-
-int sem_create(key_t cle, int initval)
-{
-    int semid;
-    union semun arg_ctl;
-
-    semid = semget(cle, 1, IPC_CREAT | IPC_EXCL | 0600);
-    if (semid == -1) {
-        perror("Erreur semget");
-        return -1;
-    }
-
-    arg_ctl.val = initval;
-    if (semctl(semid, 0, SETVAL, arg_ctl) == -1) {
-        perror("Erreur initialisation sémaphore");
-        exit(1);
-    }
-
-    return semid;
-}
 
 int main()
 {
