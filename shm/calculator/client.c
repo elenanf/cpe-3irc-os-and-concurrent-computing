@@ -50,8 +50,10 @@ int main(int argc, char* argv[])
 
             request.clientId = getpid();
             request.nombre1 = rand() % 10;
-            request.nombre2 = rand() % 5;
-            request.op = (rand() % 2) == 0 ? '+' : '-';
+            request.nombre2 = (rand() % 4) + 1;  // entre 1 et 4, jamais 0            
+            char ops[] = {'+', '-', '*', '/'};
+            request.op = ops[rand() % 4];
+
             request.index = i;  
             request.ready = 1;
 

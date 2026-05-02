@@ -66,7 +66,16 @@ int main(int argc, char* argv[])
                 response.resultat = response.nombre1 + response.nombre2;
             } else if (response.op == '-') {
                 response.resultat = response.nombre1 - response.nombre2;
-            };
+            } else if (response.op == '*') {
+                response.resultat = response.nombre1 * response.nombre2;
+            } else if (response.op == '/') {
+                if (response.nombre2 == 0) {
+                    printf("Division par zéro !\n");
+                    response.resultat = 0;
+                } else {
+                    response.resultat = response.nombre1 / response.nombre2;
+                }
+            }
 
             P(mutexResponse);
             memResponse[received.index] = response;
