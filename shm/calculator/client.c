@@ -11,18 +11,23 @@
 #define MUTEXRESPONSE 54322
 #define SEMREQUEST 98735
 #define SEMRESPONSE 78689
-#define N 3
 
 
-int main()
-{
-    int shmrequestid = shmget(MUTEXREQUEST, 3 * sizeof(struct request_client_serveur),0);
+int main(int argc, char* argv[])
+{   
+    if (argc != 2) {
+        printf("Usage: %s <N>\n", argv[0]);
+        exit(1);
+    }
+    int N = atoi(argv[1]);
+
+    int shmrequestid = shmget(MUTEXREQUEST, N * sizeof(struct request_client_serveur),0);
     if (shmrequestid == -1) {
         perror("Shmget Memory");
     }
     struct request_client_serveur* memRequest = shmat(shmrequestid,NULL,0); // attach memory
 
-    int shmresponseid = shmget(MUTEXRESPONSE, 3 * sizeof(struct result_client_serveur),0);
+    int shmresponseid = shmget(MUTEXRESPONSE, N * sizeof(struct result_client_serveur),0);
     if (shmresponseid == -1) {
         perror("Shmget Memory");
     }
@@ -32,7 +37,7 @@ int main()
     int mutexRequest = sem_get(MUTEXREQUEST);
     int mutexResponse = sem_get(MUTEXRESPONSE);
 
-    int semResponse[N];
+    int* semResponse = malloc(N * sizeof(int));
     for (int i = 0; i < N; i++){
         semResponse[i] = sem_get(SEMRESPONSE + i);
     }

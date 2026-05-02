@@ -11,10 +11,15 @@
 #define MUTEXRESPONSE 54322
 #define SEMREQUEST 98735
 #define SEMRESPONSE 78689
-#define N 3
 
-int main()
+int main(int argc, char* argv[])
 {
+    if (argc != 2) {
+        printf("Usage: %s <N>\n", argv[0]);
+        exit(1);
+    }
+    int N = atoi(argv[1]);
+
     if (sem_create(MUTEXREQUEST, 1) == -1) { 
         perror("Semaphore error");
         exit(1);
