@@ -9,8 +9,11 @@
 
 #define MUTEXREQUEST 54321
 #define MUTEXRESPONSE 54322
-#define SEMREQUEST 98735
 #define SEMRESPONSE 78689
+
+#define SEMC 12345 // conso
+#define SEMP 34257 // prod
+
 
 int main(int argc, char* argv[])
 {
@@ -32,7 +35,9 @@ int main(int argc, char* argv[])
     }
     struct result_client_serveur* memResponse = shmat(shmresponseid,NULL,0); // attach memory
 
-    int semRequest = sem_get(SEMREQUEST);
+    int semPId = sem_get(SEMP);
+    int semCId = sem_get(SEMC);
+
     int mutexRequest = sem_get(MUTEXREQUEST);
     int mutexResponse = sem_get(MUTEXRESPONSE);
 
@@ -41,20 +46,18 @@ int main(int argc, char* argv[])
         semResponse[i] = sem_get(SEMRESPONSE + i);
     }
 
+    int RI = 0; // Read Index
 
     for (int i = 0; i < N; i++) {
         if (fork() == 0) {
-            P(semRequest);
+            P(semCId);
             P(mutexRequest);
             struct request_client_serveur received;
-            for (int j = 0; j < N; j++) {
-                if (memRequest[j].ready == 1) {
-                    received = memRequest[j];
-                    memRequest[j].ready = 0;
-                    break;
-                }
-            }
+            received = memRequest[RI];
+            RI = (RI + 1) % N; // RI = 0 when pass past 9
             V(mutexRequest);
+            V(semPId);
+
 
             struct result_client_serveur response;
             response.nombre1 = received.nombre1;
@@ -85,6 +88,10 @@ int main(int argc, char* argv[])
             exit(0);
         }
     }
+
+    shmdt(memRequest);
+    shmdt(memResponse);
+
 
 
     for(int i = 0; i < N; i++) {

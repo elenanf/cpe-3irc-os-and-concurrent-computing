@@ -9,8 +9,10 @@
 
 #define MUTEXREQUEST 54321
 #define MUTEXRESPONSE 54322
-#define SEMREQUEST 98735
 #define SEMRESPONSE 78689
+
+#define SEMC 12345 // conso
+#define SEMP 34257 // prod
 
 int main(int argc, char* argv[])
 {
@@ -30,7 +32,12 @@ int main(int argc, char* argv[])
         exit(1);
     }
 
-    if (sem_create(SEMREQUEST, 0) == -1) { 
+    if (sem_create(SEMC, 0) == -1) { 
+        perror("Semaphore error");
+        exit(1);
+    }
+
+    if (sem_create(SEMP, N) == -1) { 
         perror("Semaphore error");
         exit(1);
     }

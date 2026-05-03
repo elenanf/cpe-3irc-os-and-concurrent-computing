@@ -9,8 +9,10 @@
 
 #define MUTEXREQUEST 54321
 #define MUTEXRESPONSE 54322
-#define SEMREQUEST 98735
 #define SEMRESPONSE 78689
+
+#define SEMC 12345 // conso
+#define SEMP 34257 // prod
 
 int main(int argc, char* argv[])
 {
@@ -22,8 +24,9 @@ int main(int argc, char* argv[])
 
     sem_delete(sem_get(MUTEXREQUEST));
     sem_delete(sem_get(MUTEXRESPONSE));
-    sem_delete(sem_get(SEMREQUEST));
-    
+    sem_delete(sem_get(SEMC));
+    sem_delete(sem_get(SEMP));
+
 
     for (int i = 0; i < N; i++) {
         sem_delete(sem_get(SEMRESPONSE + i));

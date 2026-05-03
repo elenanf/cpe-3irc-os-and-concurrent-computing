@@ -7,7 +7,6 @@ struct request_client_serveur {
     int nombre2;
     char op;
     int index;
-    int ready;
 };
 
 struct result_client_serveur {
